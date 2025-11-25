@@ -11,6 +11,7 @@ import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { ScenarioTab } from '@/components/project/scenario-tab'
 import { WorkspaceTab } from '@/components/project/workspace-tab'
+import { ProjectProgressStepper } from '@/components/project/project-progress-stepper'
 
 // Mock data for development
 const MOCK_PROJECT = {
@@ -73,10 +74,6 @@ export default function ProjectDetailPage() {
                         <Film className="mr-2 h-4 w-4" />
                         ワークスペース
                     </TabsTrigger>
-                    <TabsTrigger value="delivery" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-                        <CheckCircle2 className="mr-2 h-4 w-4" />
-                        納品
-                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-6">
@@ -126,26 +123,8 @@ export default function ProjectDetailPage() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 space-y-4">
-                                    {[1, 2, 3, 4, 5, 6, 7].map((step) => (
-                                        <div key={step} className="flex items-center gap-3">
-                                            <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold border 
-                        ${step < MOCK_PROJECT.phase ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500' :
-                                                    step === MOCK_PROJECT.phase ? 'bg-primary/10 border-primary text-primary' :
-                                                        'bg-muted border-border text-muted-foreground'}`}>
-                                                {step < MOCK_PROJECT.phase ? <CheckCircle2 className="h-3 w-3" /> : step}
-                                            </div>
-                                            <span className={`text-sm ${step === MOCK_PROJECT.phase ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
-                                                {step === 1 && 'プロジェクト開始'}
-                                                {step === 2 && 'ヒアリング'}
-                                                {step === 3 && 'シナリオ'}
-                                                {step === 4 && '字コンテ'}
-                                                {step === 5 && '絵コンテ'}
-                                                {step === 6 && '動画編集'}
-                                                {step === 7 && '納品'}
-                                            </span>
-                                        </div>
-                                    ))}
+                                <div className="mt-8">
+                                    <ProjectProgressStepper currentPhase={MOCK_PROJECT.phase} />
                                 </div>
                             </CardContent>
                         </Card>
@@ -158,20 +137,6 @@ export default function ProjectDetailPage() {
 
                 <TabsContent value="workspace">
                     <WorkspaceTab />
-                </TabsContent>
-
-                <TabsContent value="delivery">
-                    <Card className="bg-card/50 border-border backdrop-blur-sm">
-                        <CardHeader>
-                            <CardTitle>最終納品</CardTitle>
-                            <CardDescription>最終成果物をダウンロードします。</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-center py-12 text-muted-foreground">
-                                Delivery Tab Content (Coming Soon)
-                            </div>
-                        </CardContent>
-                    </Card>
                 </TabsContent>
             </Tabs>
         </AppLayout>
