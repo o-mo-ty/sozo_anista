@@ -1,4 +1,4 @@
-# AI Anime Studio - 開発要件定義書
+# SOZO Anime Studio - System Specification開発要件定義書
 
 ## 1. プロジェクト概要
 アニメ制作会社（自社）が使用する「AI制作進行管理 & クライアントレビューシステム」。

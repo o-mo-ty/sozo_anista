@@ -11,6 +11,8 @@ import {
     Plus,
     Video,
     FileText,
+    Sparkles,
+    Home,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -25,16 +27,21 @@ export function Sidebar({ className }: SidebarProps) {
     const pathname = usePathname()
 
     return (
-        <div className={cn('pb-12 w-64 border-r bg-zinc-950/50 backdrop-blur-xl h-screen fixed left-0 top-0 z-50', className)}>
+        <div className={cn('pb-12 w-64 border-r border-sidebar-border bg-sidebar/95 backdrop-blur-xl h-screen fixed left-0 top-0 z-50 transition-colors duration-300', className)}>
             <div className="space-y-4 py-4">
                 <div className="px-3 py-2">
-                    <div className="flex items-center gap-2 px-4 mb-6">
-                        <div className="h-8 w-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-                            <Video className="h-5 w-5 text-white" />
+                    <div className="flex items-center gap-3 px-4 mb-8">
+                        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 border border-white/10">
+                            <Sparkles className="h-5 w-5 text-white fill-white/20" />
                         </div>
-                        <h2 className="text-lg font-bold tracking-tight text-white">
-                            AI Anime Studio
-                        </h2>
+                        <div className="flex flex-col">
+                            <span className="font-bold text-lg tracking-tight leading-none text-white">
+                                SOZO
+                            </span>
+                            <span className="text-[10px] font-medium text-indigo-300 tracking-widest uppercase">
+                                Anime Studio
+                            </span>
+                        </div>
                     </div>
                     <div className="space-y-1">
                         <Button
@@ -43,8 +50,8 @@ export function Sidebar({ className }: SidebarProps) {
                             className="w-full justify-start"
                         >
                             <Link href="/">
-                                <LayoutDashboard className="mr-2 h-4 w-4" />
-                                Dashboard
+                                <Home className="mr-2 h-4 w-4" />
+                                ホーム
                             </Link>
                         </Button>
                         <Button
@@ -54,7 +61,7 @@ export function Sidebar({ className }: SidebarProps) {
                         >
                             <Link href="/projects">
                                 <FolderOpen className="mr-2 h-4 w-4" />
-                                Projects
+                                プロジェクト
                             </Link>
                         </Button>
                     </div>
@@ -62,7 +69,7 @@ export function Sidebar({ className }: SidebarProps) {
                 <Separator className="mx-4 w-auto bg-zinc-800" />
                 <div className="px-3 py-2">
                     <h2 className="mb-2 px-4 text-xs font-semibold tracking-tight text-zinc-400">
-                        Recent Projects
+                        最近のプロジェクト
                     </h2>
                     <div className="space-y-1">
                         {/* TODO: Fetch recent projects dynamically */}
