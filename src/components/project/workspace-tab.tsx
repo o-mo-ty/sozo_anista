@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Plus, Trash2, Play, Image as ImageIcon, GripVertical, History as HistoryIcon, Sparkles, Search, Filter, List, LayoutGrid, MoreHorizontal, Save } from 'lucide-react'
+import { Plus, Trash2, Play, Image as ImageIcon, GripVertical, History as HistoryIcon, Sparkles, Search, Filter, List, LayoutGrid, MoreHorizontal, Save, Check } from 'lucide-react'
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
     DndContext,
@@ -36,13 +36,13 @@ import {
     useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { v4 as uuidv4 } from 'uuid' // We might need this, or just use random string
+import { v4 as uuidv4 } from 'uuid'
 import { usePreventNavigation } from '@/hooks/use-prevent-navigation'
+import { createClient } from '@/utils/supabase/client'
 
 // Type definition for a Scene
 export type Scene = {
     id: string
-    // sceneNo is now derived from index, but we keep it in type if needed for backend
     sceneNo: number
     action: string
     dialogue: string
@@ -51,35 +51,6 @@ export type Scene = {
     videoUrl?: string
     status: 'pending' | 'generating' | 'completed' | 'approved'
 }
-
-// Mock data
-const INITIAL_DATA: Scene[] = [
-    {
-        id: '1',
-        sceneNo: 1,
-        action: '主人公が路地裏を走る。息を切らしている。',
-        dialogue: '（ハァハァ……）',
-        duration: 3,
-        status: 'completed',
-        imageUrl: 'https://placehold.co/300x169/222/FFF?text=Scene+1',
-    },
-    {
-        id: '2',
-        sceneNo: 2,
-        action: 'エナジードリンクを取り出し、一口飲む。',
-        dialogue: 'これさえあれば……！',
-        duration: 2,
-        status: 'pending',
-    },
-    {
-        id: '3',
-        sceneNo: 3,
-        action: '目が光り、猛スピードで壁を駆け上がる。',
-        dialogue: 'いくぞおおお！',
-        duration: 4,
-        status: 'pending',
-    },
-]
 
 // Helper to format seconds into MM:SS
 const formatTime = (seconds: number) => {
@@ -138,13 +109,46 @@ const DraggableRow = ({ row, onInsert }: { row: Row<Scene>, onInsert: () => void
     )
 }
 
-export function WorkspaceTab() {
-    const [data, setData] = useState<Scene[]>(INITIAL_DATA)
+interface WorkspaceTabProps {
+    projectId: string
+}
+
+export function WorkspaceTab({ projectId }: WorkspaceTabProps) {
+    const [data, setData] = useState<Scene[]>([])
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const supabase = createClient()
 
     // Protect against accidental navigation
     usePreventNavigation(hasUnsavedChanges)
+
+    useEffect(() => {
+        const loadData = async () => {
+            if (!projectId) return
+            setIsLoading(true)
+            const { data: scenes, error } = await supabase
+                .from('scenes')
+                .select('*')
+                .eq('project_id', projectId)
+                .order('scene_no', { ascending: true })
+
+            if (scenes) {
+                const formattedScenes: Scene[] = scenes.map(s => ({
+                    id: s.id,
+                    sceneNo: s.scene_no,
+                    action: s.action || '',
+                    dialogue: s.dialogue || '',
+                    duration: s.duration || 0,
+                    imageUrl: s.video_url, // Using video_url as image for now or need separate column
+                    status: s.status as any
+                }))
+                setData(formattedScenes)
+            }
+            setIsLoading(false)
+        }
+        loadData()
+    }, [projectId])
 
     // Calculate total duration for footer
     const totalDuration = useMemo(() => {
@@ -162,11 +166,11 @@ export function WorkspaceTab() {
     // Helper to insert a new scene
     const insertScene = (index: number) => {
         const newScene: Scene = {
-            id: crypto.randomUUID(),
-            sceneNo: 0, // Will be recalculated by index
+            id: uuidv4(),
+            sceneNo: 0, // Will be recalculated
             action: '',
             dialogue: '',
-            duration: 3, // Default duration
+            duration: 3,
             status: 'pending',
         }
 
@@ -186,10 +190,96 @@ export function WorkspaceTab() {
 
     const handleSave = async () => {
         setIsSaving(true)
-        // Mock API call
-        await new Promise(resolve => setTimeout(resolve, 800))
-        setIsSaving(false)
-        setHasUnsavedChanges(false)
+        try {
+            // Upsert all scenes
+            // Note: This is inefficient for large lists, but fine for prototype
+            const scenesToSave = data.map((scene, index) => ({
+                id: scene.id.length < 36 ? undefined : scene.id, // Handle new scenes (if using fake IDs initially, but we use uuidv4 so it's fine, actually we need to handle new vs existing. uuidv4 is fine for ID if we let DB handle it or we generate it. Supabase gen_random_uuid is default. If we send ID, it uses it.)
+                // Actually, if we generated ID on client, we can send it.
+                project_id: projectId,
+                scene_no: index + 1,
+                action: scene.action,
+                dialogue: scene.dialogue,
+                duration: scene.duration,
+                status: scene.status
+            }))
+
+            const { error } = await supabase
+                .from('scenes')
+                .upsert(scenesToSave)
+
+            if (error) throw error
+
+            // Also delete scenes that are not in data anymore?
+            // For now, we just upsert. Deletion logic would require tracking deleted IDs.
+            // Let's assume simple upsert for now.
+
+            setHasUnsavedChanges(false)
+            alert('保存しました')
+        } catch (e) {
+            console.error('Error saving scenes:', e)
+            alert('保存に失敗しました')
+        } finally {
+            setIsSaving(false)
+        }
+    }
+
+    const handleComplete = async () => {
+        if (hasUnsavedChanges) {
+            alert('先に変更を保存してください')
+            return
+        }
+        if (!confirm('字コンテを完了とし、クライアントに確認依頼を送りますか？')) return
+
+        setIsSaving(true)
+        try {
+            // 1. Get current version count to determine next version number
+            const { count, error: countError } = await supabase
+                .from('storyboard_versions')
+                .select('*', { count: 'exact', head: true })
+                .eq('project_id', projectId)
+
+            if (countError) throw countError
+            const nextVersion = (count || 0) + 1
+
+            // 2. Save snapshot to storyboard_versions
+            // We need to fetch the latest scenes data from DB to ensure we have the exact state being saved
+            // (Although 'data' state should be synced because we checked hasUnsavedChanges)
+            const { data: currentScenes, error: fetchError } = await supabase
+                .from('scenes')
+                .select('*')
+                .eq('project_id', projectId)
+                .order('scene_no', { ascending: true })
+
+            if (fetchError) throw fetchError
+
+            const { error: versionError } = await supabase
+                .from('storyboard_versions')
+                .insert({
+                    project_id: projectId,
+                    version_number: nextVersion,
+                    name: `Version ${nextVersion}`,
+                    scenes_data: currentScenes,
+                    comment: 'クライアント確認依頼'
+                })
+
+            if (versionError) throw versionError
+
+            // 3. Update project status to 'review'
+            const { error: updateError } = await supabase
+                .from('projects')
+                .update({ status: 'review' })
+                .eq('id', projectId)
+
+            if (updateError) throw updateError
+
+            alert('バージョンを保存し、クライアントに確認依頼を送信しました')
+        } catch (e) {
+            console.error('Error completing storyboard:', e)
+            alert('送信に失敗しました')
+        } finally {
+            setIsSaving(false)
+        }
     }
 
     const columns = useMemo<ColumnDef<Scene>[]>(() => [
@@ -498,6 +588,17 @@ export function WorkspaceTab() {
                         </Button>
                     </div>
                 )}
+
+                <div className="h-6 w-[1px] bg-zinc-800 mx-2"></div>
+
+                <Button
+                    onClick={handleComplete}
+                    disabled={isSaving || hasUnsavedChanges}
+                    className="bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-500/20"
+                >
+                    <Check className="mr-2 h-4 w-4" />
+                    完了・確認依頼
+                </Button>
             </div>
         </div>
     )
