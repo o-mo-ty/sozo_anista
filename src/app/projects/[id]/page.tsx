@@ -50,7 +50,12 @@ export default function ProjectDetailPage() {
                     <div className="flex items-center gap-2">
                         <div className="text-right mr-4">
                             <p className="text-xs text-zinc-500 uppercase font-semibold">現在のフェーズ</p>
-                            <p className="text-sm font-medium text-indigo-400">Step {MOCK_PROJECT.phase}: 字コンテ</p>
+                            <p className="text-sm font-medium text-indigo-400">
+                                Step {MOCK_PROJECT.phase}: 字コンテ
+                                <span className="ml-2 text-xs text-zinc-500 font-normal">
+                                    (締切: 11/30)
+                                </span>
+                            </p>
                         </div>
                         <Button className="bg-indigo-600 hover:bg-indigo-700">
                             <Send className="mr-2 h-4 w-4" />
@@ -77,8 +82,8 @@ export default function ProjectDetailPage() {
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-6">
-                    <div className="grid gap-6 md:grid-cols-3">
-                        <Card className="md:col-span-2 bg-card/50 border-border backdrop-blur-sm">
+                    <div className="space-y-6">
+                        <Card className="bg-card/50 border-border backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle>プロジェクト詳細</CardTitle>
                             </CardHeader>

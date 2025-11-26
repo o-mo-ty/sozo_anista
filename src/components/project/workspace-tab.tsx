@@ -447,7 +447,7 @@ export function WorkspaceTab() {
                 </div>
                 <Button variant="outline" className="border-zinc-700">下書き保存</Button>
                 <Button className="bg-indigo-600 hover:bg-indigo-700">
-                    次のフェーズへ進む (絵コンテ)
+                    次のフェーズへ進む (ビデオコンテ)
                 </Button>
             </div>
         </div>
