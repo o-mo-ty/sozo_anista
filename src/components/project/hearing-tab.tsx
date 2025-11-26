@@ -7,10 +7,18 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Save, Sparkles } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/utils/supabase/client'
 
-export function HearingTab() {
+
+interface HearingTabProps {
+    projectId: string
+}
+
+export function HearingTab({ projectId }: HearingTabProps) {
     const [isSaving, setIsSaving] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const supabase = createClient()
     const [formData, setFormData] = useState({
         // 1. プロジェクト概要
         title: '',
@@ -78,15 +86,71 @@ export function HearingTab() {
         expectations: '',
     })
 
+    useEffect(() => {
+        const loadData = async () => {
+            if (!projectId) return
+            setIsLoading(true)
+            const { data, error } = await supabase
+                .from('hearing_sheets')
+                .select('responses')
+                .eq('project_id', projectId)
+                .single()
+
+            if (data && data.responses) {
+                setFormData(prev => ({ ...prev, ...data.responses }))
+            }
+            setIsLoading(false)
+        }
+        loadData()
+    }, [projectId])
+
     const handleChange = (key: string, value: string) => {
         setFormData(prev => ({ ...prev, [key]: value }))
     }
 
     const handleSave = async () => {
         setIsSaving(true)
-        // Mock API call
-        await new Promise(resolve => setTimeout(resolve, 800))
-        setIsSaving(false)
+        try {
+            // Check if exists
+            const { data: existing } = await supabase
+                .from('hearing_sheets')
+                .select('id')
+                .eq('project_id', projectId)
+                .single()
+
+            let error;
+            if (existing) {
+                const { error: updateError } = await supabase
+                    .from('hearing_sheets')
+                    .update({
+                        responses: formData,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('project_id', projectId)
+                error = updateError
+            } else {
+                const { error: insertError } = await supabase
+                    .from('hearing_sheets')
+                    .insert({
+                        project_id: projectId,
+                        responses: formData,
+                        status: 'draft'
+                    })
+                error = insertError
+            }
+
+            if (error) throw error
+            alert('保存しました')
+        } catch (e) {
+            console.error('Error saving hearing sheet:', e)
+            alert('保存に失敗しました')
+        } finally {
+            setIsSaving(false)
+        }
+    }
+
+    if (isLoading) {
+        return <div className="text-center py-20 text-zinc-500">読み込み中...</div>
     }
 
     return (
