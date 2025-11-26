@@ -65,6 +65,17 @@ export default function NewProjectPage() {
                             </div>
 
                             <div className="space-y-2">
+                                <Label htmlFor="clientEmail">クライアント メールアドレス</Label>
+                                <Input
+                                    id="clientEmail"
+                                    type="email"
+                                    placeholder="例: client@example.com"
+                                    className="bg-zinc-900/50 border-zinc-800"
+                                    required
+                                />
+                            </div>
+
+                            <div className="space-y-2">
                                 <Label htmlFor="description">プロジェクト概要</Label>
                                 <Textarea
                                     id="description"
