@@ -108,15 +108,15 @@ export default function ProjectDetailPage() {
                 </TabsContent>
 
                 <TabsContent value="hearing">
-                    <HearingTab />
+                    <HearingTab projectId={MOCK_PROJECT.id} />
                 </TabsContent>
 
                 <TabsContent value="scenario">
-                    <ScenarioTab />
+                    <ScenarioTab projectId={MOCK_PROJECT.id} />
                 </TabsContent>
 
                 <TabsContent value="workspace">
-                    <WorkspaceTab />
+                    <WorkspaceTab projectId={MOCK_PROJECT.id} />
                 </TabsContent>
             </Tabs>
         </AppLayout>
