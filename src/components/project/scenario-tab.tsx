@@ -11,21 +11,21 @@ import { useState } from 'react'
 const MOCK_SCENARIOS = [
     {
         id: 'option_a',
-        title: 'Option A: Energetic & Fast-Paced',
-        content: 'The protagonist runs through the city, dodging obstacles with parkour moves. The energy drink glows in his hand. He takes a sip and jumps over a building. The camera spins around him in mid-air.',
-        tags: ['Action', 'High Energy', 'Urban'],
+        title: '案A: エネルギッシュ & スピード感',
+        content: '主人公がパルクールのような動きで障害物を避けながら街を疾走する。手にはエナジードリンクが光っている。一口飲むと、ビルの屋上を飛び越える。空中でカメラが彼の周りを回転する。',
+        tags: ['アクション', 'ハイエナジー', '都会的'],
     },
     {
         id: 'option_b',
-        title: 'Option B: Emotional & Atmospheric',
-        content: 'Rainy night. The protagonist looks tired at his desk. He sees the energy drink. Takes a sip. The rain stops, and the sun rises. He smiles and gets back to work with renewed focus.',
-        tags: ['Emotional', 'Cinematic', 'Focus'],
+        title: '案B: エモーショナル & 雰囲気重視',
+        content: '雨の夜。主人公はデスクで疲れ切っている。ふとエナジードリンクに目をやる。一口飲むと、雨が止み、朝日が昇る。彼は微笑み、新たな集中力で仕事に戻る。',
+        tags: ['エモーショナル', 'シネマティック', '集中'],
     },
     {
         id: 'option_c',
-        title: 'Option C: Abstract & Psychedelic',
-        content: 'The can opens, and colorful liquid transforms into a dragon. The protagonist rides the dragon through a neon tunnel. The world explodes into colors. Ends with the logo.',
-        tags: ['Abstract', 'Visuals', 'Creative'],
+        title: '案C: 抽象的 & サイケデリック',
+        content: '缶が開くと、カラフルな液体がドラゴンの姿に変わる。主人公はそのドラゴンに乗ってネオンのトンネルを抜ける。世界が色彩で爆発する。最後にロゴが表示される。',
+        tags: ['抽象的', 'ビジュアル重視', 'クリエイティブ'],
     },
 ]
 

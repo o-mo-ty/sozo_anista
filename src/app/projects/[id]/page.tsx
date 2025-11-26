@@ -20,7 +20,7 @@ const MOCK_PROJECT = {
     client: 'Client A',
     status: 'In Progress',
     phase: 4, // Step 4: Text Storyboard
-    description: 'A 15-second anime commercial for a new energy drink.',
+    description: '新しいエナジードリンクの15秒アニメCM。',
 }
 
 export default function ProjectDetailPage() {
