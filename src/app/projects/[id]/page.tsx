@@ -11,6 +11,7 @@ import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { ScenarioTab } from '@/components/project/scenario-tab'
 import { WorkspaceTab } from '@/components/project/workspace-tab'
+import { HearingTab } from '@/components/project/hearing-tab'
 import { ProjectProgressStepper } from '@/components/project/project-progress-stepper'
 
 // Mock data for development
@@ -41,26 +42,11 @@ export default function ProjectDetailPage() {
                     <div>
                         <div className="flex items-center gap-3 mb-2">
                             <h1 className="text-3xl font-bold text-white">{MOCK_PROJECT.title}</h1>
-                            <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
-                                {MOCK_PROJECT.status}
+                            <Badge variant="outline" className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-base px-3 py-1">
+                                Step {MOCK_PROJECT.phase}: 字コンテ
                             </Badge>
                         </div>
                         <p className="text-zinc-400">クライアント: {MOCK_PROJECT.client}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="text-right mr-4">
-                            <p className="text-xs text-zinc-500 uppercase font-semibold">現在のフェーズ</p>
-                            <p className="text-sm font-medium text-indigo-400">
-                                Step {MOCK_PROJECT.phase}: 字コンテ
-                                <span className="ml-2 text-xs text-zinc-500 font-normal">
-                                    (締切: 11/30)
-                                </span>
-                            </p>
-                        </div>
-                        <Button className="bg-indigo-600 hover:bg-indigo-700">
-                            <Send className="mr-2 h-4 w-4" />
-                            レビュー依頼
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -70,6 +56,10 @@ export default function ProjectDetailPage() {
                     <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
                         <LayoutGrid className="mr-2 h-4 w-4" />
                         概要
+                    </TabsTrigger>
+                    <TabsTrigger value="hearing" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                        ヒアリング
                     </TabsTrigger>
                     <TabsTrigger value="scenario" className="data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
                         <FileText className="mr-2 h-4 w-4" />
@@ -107,33 +97,18 @@ export default function ProjectDetailPage() {
                         <Card className="bg-card/50 border-border backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle>進捗状況</CardTitle>
-                                <CardDescription>全体の完了率</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="relative pt-1">
-                                    <div className="flex mb-2 items-center justify-between">
-                                        <div>
-                                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary bg-primary/10">
-                                                In Progress
-                                            </span>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-xs font-semibold inline-block text-primary">
-                                                57%
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-muted">
-                                        <div style={{ width: "57%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary"></div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-8">
+                                <div className="mt-2">
                                     <ProjectProgressStepper currentPhase={MOCK_PROJECT.phase} />
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
+                </TabsContent>
+
+                <TabsContent value="hearing">
+                    <HearingTab />
                 </TabsContent>
 
                 <TabsContent value="scenario">

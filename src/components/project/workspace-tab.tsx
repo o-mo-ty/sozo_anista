@@ -18,8 +18,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Plus, Trash2, Play, Image as ImageIcon, GripVertical, History as HistoryIcon, Sparkles, Search, Filter, List, LayoutGrid, MoreHorizontal } from 'lucide-react'
-import { useState, useMemo, useEffect } from 'react'
+import { Plus, Trash2, Play, Image as ImageIcon, GripVertical, History as HistoryIcon, Sparkles, Search, Filter, List, LayoutGrid, MoreHorizontal, Save } from 'lucide-react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
     DndContext,
     KeyboardSensor,
@@ -37,6 +37,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { v4 as uuidv4 } from 'uuid' // We might need this, or just use random string
+import { usePreventNavigation } from '@/hooks/use-prevent-navigation'
 
 // Type definition for a Scene
 export type Scene = {
@@ -139,6 +140,11 @@ const DraggableRow = ({ row, onInsert }: { row: Row<Scene>, onInsert: () => void
 
 export function WorkspaceTab() {
     const [data, setData] = useState<Scene[]>(INITIAL_DATA)
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+
+    // Protect against accidental navigation
+    usePreventNavigation(hasUnsavedChanges)
 
     // Calculate total duration for footer
     const totalDuration = useMemo(() => {
@@ -150,6 +156,7 @@ export function WorkspaceTab() {
         setData(prev => prev.map(scene =>
             scene.id === id ? { ...scene, [field]: value } : scene
         ))
+        setHasUnsavedChanges(true)
     }
 
     // Helper to insert a new scene
@@ -168,6 +175,21 @@ export function WorkspaceTab() {
             newData.splice(index + 1, 0, newScene)
             return newData
         })
+        setHasUnsavedChanges(true)
+    }
+
+    // Helper to delete a scene
+    const deleteScene = useCallback((id: string) => {
+        setData(prev => prev.filter(scene => scene.id !== id))
+        setHasUnsavedChanges(true)
+    }, [])
+
+    const handleSave = async () => {
+        setIsSaving(true)
+        // Mock API call
+        await new Promise(resolve => setTimeout(resolve, 800))
+        setIsSaving(false)
+        setHasUnsavedChanges(false)
     }
 
     const columns = useMemo<ColumnDef<Scene>[]>(() => [
@@ -300,14 +322,22 @@ export function WorkspaceTab() {
                         <Sparkles className="mr-1.5 h-3.5 w-3.5" />
                         <span className="text-xs font-medium">生成</span>
                     </Button>
-                    <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-red-400">
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-zinc-500 hover:text-red-400"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            deleteScene(row.original.id)
+                        }}
+                    >
                         <Trash2 className="h-4 w-4" />
                     </Button>
                 </div>
             ),
             size: 100,
         },
-    ], [])
+    ], [deleteScene])
 
     const table = useReactTable({
         data,
@@ -333,6 +363,7 @@ export function WorkspaceTab() {
                 const newIndex = old.findIndex((item) => item.id === over.id)
                 return arrayMove(old, oldIndex, newIndex)
             })
+            setHasUnsavedChanges(true)
         }
     }
 
@@ -441,14 +472,32 @@ export function WorkspaceTab() {
                 </Button>
             </div>
 
-            <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-zinc-800">
+            <div className="sticky bottom-0 z-10 bg-zinc-950/90 backdrop-blur-sm flex justify-end gap-4 mt-8 pt-4 border-t border-zinc-800 items-center h-16 -mx-6 px-6">
                 <div className="text-right text-sm text-zinc-500 mr-auto">
                     合計時間: <span className="text-white font-bold">{totalDuration.toFixed(1)}</span> 秒
                 </div>
-                <Button variant="outline" className="border-zinc-700">下書き保存</Button>
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                    次のフェーズへ進む (ビデオコンテ)
-                </Button>
+
+                {hasUnsavedChanges && (
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        <Button
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20"
+                        >
+                            {isSaving ? (
+                                <>
+                                    <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                                    保存中...
+                                </>
+                            ) : (
+                                <>
+                                    <Save className="mr-2 h-4 w-4" />
+                                    変更を保存
+                                </>
+                            )}
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     )
