@@ -13,36 +13,50 @@
 ### B. Client (外部)
 - **Reviewer:** 提案（シナリオ・コンテ・動画）の確認、フィードバック、承認（認証フラグ）。
 
-## 3. 制作ワークフロー (7 Steps)
+## 3. 制作ワークフロー (Detailed Flow)
 
 ### Phase 1: Project Launch (プロジェクト立ち上げ)
-- **Action:** PMがプロジェクトを登録。
-- **Data:** クライアント名、営業担当、PM担当、クライアント用アカウント発行（パスワード生成）。
+- **Actor:** PM (Production Manager)
+- **Action:** プロジェクトを新規作成。
+- **Input:** プロジェクト概要、クライアントのメールアドレス。
+- **System:** クライアントへ招待メールを送信（ログインURL含む）。
+- **Status:** `preparing`
 
 ### Phase 2: Hearing (ヒアリング)
-- **Action:** クライアントの要望を収集。
-- **System:** アンケートフォーム機能（現在はGoogleフォームだがシステム化）。
+- **Actor:** Client
+- **Trigger:** クライアントがメールからログイン。
+- **UI:** ログイン直後、ヒアリングシート入力画面へ誘導。
+- **Action:** ヒアリングシート（全項目）を入力し、「保存」を押下。
+- **System:** 入力内容を保存し、自動的にシナリオ生成を開始。
+- **Status:** `hearing_completed`
 
-### Phase 3: Scenario (シナリオ 3案提出)
-- **Action:** 起承転結シナリオを3案提示（GPT連携で自動生成）。
-- **Review:** クライアントが3案の中から1つを選択し、承認する。
-- **Data:** 選択されたシナリオID、チェック日、担当者コメント(Memo)、認証フラグ。
+### Phase 3: Scenario (シナリオ選定)
+- **Actor:** Client
+- **System:** ヒアリング内容を元に、AIがシナリオ案を3つ生成して表示。
+- **Action:** 3案の中から1つを選択し、要望やコメントを追記して「保存」を押下。
+- **System:** 選択されたシナリオとコメントを確定し、字コンテ生成を開始。
+- **Status:** `scenario_selected`
 
-### Phase 4: Text Storyboard (字コンテ確認)
-- **Action:** 全体ストーリーを文字で構成（GPT連携）。
-- **Flow:** GPT生成 → Creator修正 → Client確認 → Clientコメントあれば修正。
-- **Constraint:** ビデオ生成を見越してシーン分割（Max 15秒/scene）。
-- **Data:** チェック日、担当者コメント(Memo)、認証フラグ。
+### Phase 4: Text Storyboard (字コンテ制作 & レビュー)
+- **System:** 選択されたシナリオから字コンテ（秒数、ストーリー、シーン、セリフ）を自動生成。
+- **Actor:** PM / Creator
+    - **Action:** ワークスペースで生成された字コンテを確認・修正（微調整）。
+    - **Action:** 修正完了後、「完了」ボタンを押下。
+- **System:** クライアントへ確認依頼の通知を送信。
+- **Actor:** Client
+    - **Action:** 字コンテを確認し、レビューを行う。
+    - **Branch A (修正あり):** コメントを入力して「差し戻し」 → PMが再度修正。
+    - **Branch B (OK):** 「承認（OK）」ボタンを押下。
+- **Status:** `text_storyboard_review` -> `text_storyboard_approved`
 
 ### Phase 5: Video Storyboard (ビデオコンテ)
+- **Trigger:** 字コンテ承認後、フェーズ移行。
 - **Action:** 字コンテを元にビデオイメージ（静止画＋動き or 簡易動画）を制作。
 - **Flow:** Creator制作 → Client確認 → Comment/Fix。
-- **Data:** チェック日、担当者コメント(Memo)、認証フラグ。
 
 ### Phase 6: Rough Video (ラフビデオ / Frame.io)
 - **Action:** 本番動画生成・編集（Frame.io連携）。
 - **Review:** Frame.io上で詳細なレビューと修正指示。
-- **Data:** チェック日、担当者コメント、サイン（承認）。
 
 
 ## 4. 機能要件
