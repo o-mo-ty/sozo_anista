@@ -134,7 +134,7 @@ export function WorkspaceTab({ projectId }: WorkspaceTabProps) {
                 .order('scene_no', { ascending: true })
 
             if (scenes) {
-                const formattedScenes: Scene[] = scenes.map(s => ({
+                const formattedScenes: Scene[] = scenes.map((s: any) => ({
                     id: s.id,
                     sceneNo: s.scene_no,
                     action: s.action || '',
