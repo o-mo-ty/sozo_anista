@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, FileText, Film, LayoutGrid, MoreHorizontal, Send } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, FileEdit, FileText, Film, LayoutGrid, MoreHorizontal, Send } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -113,31 +113,48 @@ export default function ProjectDetailPage() {
                         </div>
                         <div className="flex items-center text-zinc-400 gap-4 text-sm">
                             <span>クライアント: {MOCK_PROJECT.client_name}</span>
-                            <span>更新日: {new Date(MOCK_PROJECT.updated_at).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Next Action Banner */}
-            <div className={`p-4 rounded-lg border flex items-center justify-between mb-6 ${nextAction.variant === 'warning' ? 'bg-amber-950/30 border-amber-900/50 text-amber-200' :
-                nextAction.variant === 'info' ? 'bg-indigo-950/30 border-indigo-900/50 text-indigo-200' :
-                    'bg-emerald-950/30 border-emerald-900/50 text-emerald-200'
+            <div className={`rounded-lg border p-4 mb-8 flex items-center justify-between transition-all duration-300 ${nextAction.variant === 'warning' ? 'bg-rose-950/10 border-rose-900/30' :
+                nextAction.variant === 'info' ? 'bg-indigo-950/10 border-indigo-900/30' :
+                    'bg-emerald-950/10 border-emerald-900/30'
                 }`}>
-                <div className="flex items-center gap-3">
-                    {nextAction.variant === 'warning' && <AlertCircle className="h-5 w-5 text-amber-400" />}
-                    {nextAction.variant === 'info' && <Clock className="h-5 w-5 text-indigo-400" />}
-                    {nextAction.variant === 'success' && <CheckCircle2 className="h-5 w-5 text-emerald-400" />}
-                    <span className="font-medium">{nextAction.message}</span>
+                <div className="flex items-center gap-4">
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${nextAction.variant === 'warning' ? 'bg-rose-500/10 text-rose-400' :
+                        nextAction.variant === 'info' ? 'bg-indigo-500/10 text-indigo-400' :
+                            'bg-emerald-500/10 text-emerald-400'
+                        }`}>
+                        {nextAction.variant === 'warning' && <FileEdit className="h-5 w-5" />}
+                        {nextAction.variant === 'info' && <Clock className="h-5 w-5" />}
+                        {nextAction.variant === 'success' && <CheckCircle2 className="h-5 w-5" />}
+                    </div>
+
+                    <div>
+                        <div className={`text-xs font-bold tracking-wider uppercase mb-0.5 ${nextAction.variant === 'warning' ? 'text-rose-400' :
+                            nextAction.variant === 'info' ? 'text-indigo-400' :
+                                'text-emerald-400'
+                            }`}>
+                            {nextAction.variant === 'warning' ? 'Next Action' :
+                                nextAction.variant === 'info' ? 'Status' : 'Completed'}
+                        </div>
+                        <p className="text-base font-medium text-zinc-200">
+                            {nextAction.message.replace('要対応：', '')}
+                        </p>
+                    </div>
                 </div>
+
                 {nextAction.link && (
                     <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => setActiveTab(nextAction.link!)}
+                        size="sm"
                         className={`
-                            ${nextAction.variant === 'warning' ? 'border-amber-700 hover:bg-amber-900/50 text-amber-100' : ''}
-                            ${nextAction.variant === 'info' ? 'border-indigo-700 hover:bg-indigo-900/50 text-indigo-100' : ''}
+                            font-medium transition-all shadow-sm
+                            ${nextAction.variant === 'warning' ? 'bg-rose-600 hover:bg-rose-700 text-white hover:shadow-rose-500/20' : ''}
+                            ${nextAction.variant === 'info' ? 'bg-indigo-600 hover:bg-indigo-700 text-white hover:shadow-indigo-500/20' : ''}
                         `}
                     >
                         {nextAction.label}

@@ -3,14 +3,14 @@
 import { AppLayout } from '@/components/app-layout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Activity, Clock, FileText, MoreHorizontal, PlayCircle, Star, TrendingUp, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Activity, Clock, FileText, MoreHorizontal, PlayCircle, Star, TrendingUp, AlertCircle, CheckCircle2, FileEdit } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Dashboard() {
   // Mock Data
   const stats = [
     { label: '進行中のプロジェクト', value: '12', icon: PlayCircle, color: 'text-indigo-400' },
-    { label: '要対応', value: '3', icon: AlertCircle, color: 'text-rose-400' },
+    { label: '要対応', value: '3', icon: FileEdit, color: 'text-rose-400' },
     { label: '確認待ち', value: '4', icon: Clock, color: 'text-zinc-400' },
   ]
 
