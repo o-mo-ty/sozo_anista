@@ -68,9 +68,9 @@ export function Sidebar({ className }: SidebarProps) {
                             )}
                         >
                             <Link href="/">
-                                <Home className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
+                                <LayoutDashboard className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
                                 <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-none" : "")}>
-                                    ホーム
+                                    ダッシュボード
                                 </span>
                             </Link>
                         </Button>
@@ -78,7 +78,7 @@ export function Sidebar({ className }: SidebarProps) {
                             asChild
                             variant={pathname === '/projects/new' ? 'secondary' : 'ghost'}
                             className={cn(
-                                "w-full transition-all duration-300 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30",
+                                "w-full transition-all duration-300",
                                 isCollapsed
                                     ? "h-auto flex-col justify-center gap-1 py-3 px-0"
                                     : "justify-start mb-2"
