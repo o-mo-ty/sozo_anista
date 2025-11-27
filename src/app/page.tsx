@@ -32,24 +32,24 @@ export default function Dashboard() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white">ダッシュボード</h1>
-          <p className="text-zinc-400 mt-1">本日のタスクとプロジェクトの状況概要</p>
+          <p className="text-zinc-400 mt-1">プロジェクトの状況概要とタスク確認</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid gap-4 md:grid-cols-3">
           {stats.map((stat, i) => (
             <Card key={i} className={`border-zinc-800 backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg ${stat.label === '要対応'
-                ? 'bg-gradient-to-br from-rose-950/30 to-zinc-900/50 border-rose-900/30 hover:shadow-rose-900/20'
-                : stat.label === '進行中のプロジェクト'
-                  ? 'bg-gradient-to-br from-indigo-950/30 to-zinc-900/50 border-indigo-900/30 hover:shadow-indigo-900/20'
-                  : 'bg-zinc-900/50 hover:bg-zinc-900/70'
+              ? 'bg-gradient-to-br from-rose-950/30 to-zinc-900/50 border-rose-900/30 hover:shadow-rose-900/20'
+              : stat.label === '進行中のプロジェクト'
+                ? 'bg-gradient-to-br from-indigo-950/30 to-zinc-900/50 border-indigo-900/30 hover:shadow-indigo-900/20'
+                : 'bg-zinc-900/50 hover:bg-zinc-900/70'
               }`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-zinc-400">
                   {stat.label}
                 </CardTitle>
                 <div className={`p-2 rounded-full ${stat.label === '要対応' ? 'bg-rose-500/10' :
-                    stat.label === '進行中のプロジェクト' ? 'bg-indigo-500/10' : 'bg-zinc-800'
+                  stat.label === '進行中のプロジェクト' ? 'bg-indigo-500/10' : 'bg-zinc-800'
                   }`}>
                   <stat.icon className={`h-4 w-4 ${stat.color}`} />
                 </div>

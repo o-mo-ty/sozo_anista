@@ -69,8 +69,8 @@ export function Sidebar({ className }: SidebarProps) {
                         >
                             <Link href="/">
                                 <LayoutDashboard className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
-                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-none" : "")}>
-                                    ダッシュボード
+                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-tight text-center" : "")}>
+                                    {isCollapsed ? <>ダッシュ<br />ボード</> : "ダッシュボード"}
                                 </span>
                             </Link>
                         </Button>
@@ -86,8 +86,8 @@ export function Sidebar({ className }: SidebarProps) {
                         >
                             <Link href="/projects/new">
                                 <Plus className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
-                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-none" : "")}>
-                                    作成
+                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-tight text-center" : "")}>
+                                    {isCollapsed ? <>プロジェクト<br />作成</> : "プロジェクト作成"}
                                 </span>
                             </Link>
                         </Button>
@@ -103,8 +103,8 @@ export function Sidebar({ className }: SidebarProps) {
                         >
                             <Link href="/projects">
                                 <FolderOpen className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
-                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-none" : "")}>
-                                    一覧
+                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-tight text-center" : "")}>
+                                    {isCollapsed ? <>プロジェクト<br />一覧</> : "プロジェクト一覧"}
                                 </span>
                             </Link>
                         </Button>
