@@ -168,15 +168,22 @@ export function ScenarioTab({ projectId }: ScenarioTabProps) {
         }
     }
 
-    if (isLoading) {
-        return <div className="text-center py-20 text-zinc-500">読み込み中...</div>
-    }
+    // if (isLoading) {
+    //     return <div className="text-center py-20 text-zinc-500">読み込み中...</div>
+    // }
 
     return (
-        <div className="space-y-6 pb-20">
+        <div className="space-y-6 pb-20 relative">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-xl font-semibold text-white">シナリオ選択</h2>
+                    <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                        シナリオ選択
+                        {isLoading && (
+                            <span className="text-sm font-normal text-zinc-500 ml-2 animate-pulse">
+                                データ読み込み中...
+                            </span>
+                        )}
+                    </h2>
                     <p className="text-zinc-400">このプロジェクトに最適な方向性を選択してください。</p>
                 </div>
                 <div className="flex gap-2">

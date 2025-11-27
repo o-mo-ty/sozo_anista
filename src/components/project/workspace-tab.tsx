@@ -475,6 +475,11 @@ export function WorkspaceTab({ projectId }: WorkspaceTabProps) {
                         <Filter className="mr-2 h-4 w-4" />
                         フィルター
                     </Button>
+                    {isLoading && (
+                        <span className="text-xs text-zinc-500 animate-pulse ml-2">
+                            読み込み中...
+                        </span>
+                    )}
                 </div>
 
                 {/* Right: View, History, Bulk */}

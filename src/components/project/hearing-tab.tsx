@@ -149,17 +149,22 @@ export function HearingTab({ projectId }: HearingTabProps) {
         }
     }
 
-    if (isLoading) {
-        return <div className="text-center py-20 text-zinc-500">読み込み中...</div>
-    }
+    // if (isLoading) {
+    //     return <div className="text-center py-20 text-zinc-500">読み込み中...</div>
+    // }
 
     return (
-        <div className="space-y-8 pb-20">
+        <div className="space-y-8 pb-20 relative">
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                         <Sparkles className="h-6 w-6 text-indigo-400" />
                         ヒアリングシート
+                        {isLoading && (
+                            <span className="text-sm font-normal text-zinc-500 ml-2 animate-pulse">
+                                データ読み込み中...
+                            </span>
+                        )}
                     </h2>
                     <p className="text-zinc-400 mt-1">
                         プロジェクトの要件を詳細に定義します。全10セクション。
@@ -167,7 +172,7 @@ export function HearingTab({ projectId }: HearingTabProps) {
                 </div>
                 <Button
                     onClick={handleSave}
-                    disabled={isSaving}
+                    disabled={isSaving || isLoading}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20"
                 >
                     {isSaving ? (
