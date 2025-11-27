@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ArrowLeft, CheckCircle2, Clock, FileText, Film, LayoutGrid, Send } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, FileText, Film, LayoutGrid, MoreHorizontal, Send } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -18,15 +18,82 @@ import { ProjectProgressStepper } from '@/components/project/project-progress-st
 const MOCK_PROJECT = {
     id: '1',
     title: 'Project Alpha',
-    client: 'Client A',
-    status: 'In Progress',
-    phase: 4, // Step 4: Text Storyboard
+    client_name: 'Client A',
+    status: 'review', // 'production', 'review', 'completed'
+    current_phase: 2, // 1: Initial, 2: Hearing, 3: Scenario, 4: Text Storyboard, 5: Video Storyboard, 6: Production, 7: Final Review, 8: Completed
     description: '新しいエナジードリンクの15秒アニメCM。',
+    updated_at: '2023-10-26T10:00:00Z',
 }
 
 export default function ProjectDetailPage() {
     const params = useParams()
     const [activeTab, setActiveTab] = useState('overview')
+
+    const getStatusBadge = (status: string) => {
+        switch (status) {
+            case 'completed':
+                return <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">完了</Badge>
+            case 'review':
+                return <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20">クライアント様確認中</Badge>
+            case 'production':
+                return <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20">制作チーム対応中</Badge>
+            default:
+                return <Badge variant="outline" className="text-zinc-400 border-zinc-700">準備中</Badge>
+        }
+    }
+
+    const getNextAction = (phase: number, status: string) => {
+        if (status === 'production') {
+            return {
+                message: '現在、制作チームが作業を進めています。完了までしばらくお待ちください。',
+                link: null,
+                label: null,
+                variant: 'info'
+            }
+        }
+        if (status === 'completed') {
+            return {
+                message: 'プロジェクトは完了しました。',
+                link: null,
+                label: null,
+                variant: 'success'
+            }
+        }
+
+        // Status is 'review' (Client needs to act)
+        switch (phase) {
+            case 2: // Hearing
+                return {
+                    message: '要対応：ヒアリングシートの記入をお願いします。',
+                    link: 'hearing',
+                    label: 'ヒアリングシートへ',
+                    variant: 'warning'
+                }
+            case 3: // Scenario
+                return {
+                    message: '要対応：提案されたシナリオの確認と選択をお願いします。',
+                    link: 'scenario',
+                    label: 'シナリオ確認へ',
+                    variant: 'warning'
+                }
+            case 4: // Text Storyboard
+                return {
+                    message: '要対応：字コンテの確認をお願いします。',
+                    link: 'workspace',
+                    label: '字コンテ確認へ',
+                    variant: 'warning'
+                }
+            default:
+                return {
+                    message: '要対応：内容の確認をお願いします。',
+                    link: 'overview',
+                    label: '確認する',
+                    variant: 'warning'
+                }
+        }
+    }
+
+    const nextAction = getNextAction(MOCK_PROJECT.current_phase, MOCK_PROJECT.status)
 
     return (
         <AppLayout>
@@ -42,13 +109,41 @@ export default function ProjectDetailPage() {
                     <div>
                         <div className="flex items-center gap-3 mb-2">
                             <h1 className="text-3xl font-bold text-white">{MOCK_PROJECT.title}</h1>
-                            <Badge variant="outline" className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-base px-3 py-1">
-                                Step {MOCK_PROJECT.phase}: 字コンテ
-                            </Badge>
+                            {getStatusBadge(MOCK_PROJECT.status)}
                         </div>
-                        <p className="text-zinc-400">クライアント: {MOCK_PROJECT.client}</p>
+                        <div className="flex items-center text-zinc-400 gap-4 text-sm">
+                            <span>クライアント: {MOCK_PROJECT.client_name}</span>
+                            <span>更新日: {new Date(MOCK_PROJECT.updated_at).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}</span>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Next Action Banner */}
+            <div className={`p-4 rounded-lg border flex items-center justify-between mb-6 ${nextAction.variant === 'warning' ? 'bg-amber-950/30 border-amber-900/50 text-amber-200' :
+                nextAction.variant === 'info' ? 'bg-indigo-950/30 border-indigo-900/50 text-indigo-200' :
+                    'bg-emerald-950/30 border-emerald-900/50 text-emerald-200'
+                }`}>
+                <div className="flex items-center gap-3">
+                    {nextAction.variant === 'warning' && <AlertCircle className="h-5 w-5 text-amber-400" />}
+                    {nextAction.variant === 'info' && <Clock className="h-5 w-5 text-indigo-400" />}
+                    {nextAction.variant === 'success' && <CheckCircle2 className="h-5 w-5 text-emerald-400" />}
+                    <span className="font-medium">{nextAction.message}</span>
+                </div>
+                {nextAction.link && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setActiveTab(nextAction.link!)}
+                        className={`
+                            ${nextAction.variant === 'warning' ? 'border-amber-700 hover:bg-amber-900/50 text-amber-100' : ''}
+                            ${nextAction.variant === 'info' ? 'border-indigo-700 hover:bg-indigo-900/50 text-indigo-100' : ''}
+                        `}
+                    >
+                        {nextAction.label}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                )}
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -100,7 +195,7 @@ export default function ProjectDetailPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="mt-2">
-                                    <ProjectProgressStepper currentPhase={MOCK_PROJECT.phase} />
+                                    <ProjectProgressStepper currentPhase={MOCK_PROJECT.current_phase} />
                                 </div>
                             </CardContent>
                         </Card>

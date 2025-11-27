@@ -20,35 +20,35 @@ type Project = {
     updated_at: string
 }
 
-export default function ProjectsPage() {
-    // Mock Data
-    const MOCK_PROJECTS: Project[] = [
-        {
-            id: '1',
-            title: 'Project Alpha',
-            client_name: 'Client A',
-            status: 'production',
-            current_phase: 4,
-            updated_at: new Date().toISOString(),
-        },
-        {
-            id: '2',
-            title: 'Project Beta',
-            client_name: 'Client B',
-            status: 'review',
-            current_phase: 6,
-            updated_at: new Date(Date.now() - 86400000).toISOString(),
-        },
-        {
-            id: '3',
-            title: 'Project Gamma',
-            client_name: 'Client C',
-            status: 'completed',
-            current_phase: 7,
-            updated_at: new Date(Date.now() - 172800000).toISOString(),
-        },
-    ]
+// Mock Data
+const MOCK_PROJECTS: Project[] = [
+    {
+        id: '1',
+        title: 'Project Alpha',
+        client_name: 'Client A',
+        status: 'production',
+        current_phase: 4,
+        updated_at: new Date().toISOString(),
+    },
+    {
+        id: '2',
+        title: 'Project Beta',
+        client_name: 'Client B',
+        status: 'review',
+        current_phase: 6,
+        updated_at: new Date(Date.now() - 86400000).toISOString(),
+    },
+    {
+        id: '3',
+        title: 'Project Gamma',
+        client_name: 'Client C',
+        status: 'completed',
+        current_phase: 7,
+        updated_at: new Date(Date.now() - 172800000).toISOString(),
+    },
+]
 
+export default function ProjectsPage() {
     const [projects, setProjects] = useState<Project[]>(MOCK_PROJECTS)
     const [isLoading, setIsLoading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
@@ -110,9 +110,9 @@ export default function ProjectsPage() {
             case 'completed':
                 return <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20">完了</Badge>
             case 'review':
-                return <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20">確認中</Badge>
+                return <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20">クライアント様確認中</Badge>
             case 'production':
-                return <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20">制作中</Badge>
+                return <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20">制作チーム対応中</Badge>
             default:
                 return <Badge variant="outline" className="text-zinc-400 border-zinc-700">準備中</Badge>
         }
@@ -162,19 +162,18 @@ export default function ProjectsPage() {
                                         <TableHead className="text-zinc-400 font-medium">ステータス</TableHead>
                                         <TableHead className="text-zinc-400 font-medium">現在のフェーズ</TableHead>
                                         <TableHead className="text-zinc-400 font-medium">最終更新</TableHead>
-                                        <TableHead className="text-right text-zinc-400 font-medium">操作</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {isLoading ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="h-24 text-center text-zinc-500">
+                                            <TableCell colSpan={5} className="h-24 text-center text-zinc-500">
                                                 読み込み中...
                                             </TableCell>
                                         </TableRow>
                                     ) : filteredProjects.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="h-24 text-center text-zinc-500">
+                                            <TableCell colSpan={5} className="h-24 text-center text-zinc-500">
                                                 プロジェクトが見つかりません
                                             </TableCell>
                                         </TableRow>
@@ -193,12 +192,7 @@ export default function ProjectsPage() {
                                                     {getPhaseLabelJa(project.current_phase)}
                                                 </TableCell>
                                                 <TableCell className="text-zinc-500 text-sm">
-                                                    {new Date(project.updated_at).toLocaleDateString('ja-JP')}
-                                                </TableCell>
-                                                <TableCell className="text-right">
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-white">
-                                                        <MoreHorizontal className="h-4 w-4" />
-                                                    </Button>
+                                                    {new Date(project.updated_at).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}
                                                 </TableCell>
                                             </TableRow>
                                         ))
