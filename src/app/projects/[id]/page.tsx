@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, FileEdit, FileText, Film, LayoutGrid, MoreHorizontal, Send } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Edit2, FileEdit, FileText, Film, LayoutGrid, MoreHorizontal, Send } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -97,32 +97,27 @@ export default function ProjectDetailPage() {
 
     return (
         <AppLayout>
-            <div className="mb-6">
-                <Button variant="ghost" asChild className="mb-4 pl-0 hover:pl-2 transition-all text-zinc-400 hover:text-white">
+            <div className="flex items-center gap-4 mb-8">
+                <Button variant="outline" size="icon" asChild className="h-10 w-10 rounded-full border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:text-white shrink-0">
                     <Link href="/">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        ホームに戻る
+                        <ArrowLeft className="h-4 w-4" />
                     </Link>
                 </Button>
 
-                <div className="flex items-start justify-between">
-                    <div>
-                        <div className="flex items-center gap-3 mb-2">
-                            <h1 className="text-3xl font-bold text-white">{MOCK_PROJECT.title}</h1>
-                            {getStatusBadge(MOCK_PROJECT.status)}
-                        </div>
-                        <div className="flex items-center text-zinc-400 gap-4 text-sm">
-                            <span>クライアント: {MOCK_PROJECT.client_name}</span>
-                        </div>
+                <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                        <h1 className="text-2xl font-bold text-white tracking-tight">{MOCK_PROJECT.title}</h1>
+                        {getStatusBadge(MOCK_PROJECT.status)}
                     </div>
                 </div>
             </div>
 
             {/* Next Action Banner */}
-            <div className={`rounded-lg border p-4 mb-8 flex items-center justify-between transition-all duration-300 ${nextAction.variant === 'warning' ? 'bg-rose-950/10 border-rose-900/30' :
-                nextAction.variant === 'info' ? 'bg-indigo-950/10 border-indigo-900/30' :
-                    'bg-emerald-950/10 border-emerald-900/30'
+            <div className={`rounded-xl border p-5 mb-8 flex items-center justify-between transition-all duration-300 ${nextAction.variant === 'warning' ? 'bg-rose-500/5 border-rose-500/10' :
+                nextAction.variant === 'info' ? 'bg-indigo-500/5 border-indigo-500/10' :
+                    'bg-emerald-500/5 border-emerald-500/10'
                 }`}>
+
                 <div className="flex items-center gap-4">
                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${nextAction.variant === 'warning' ? 'bg-rose-500/10 text-rose-400' :
                         nextAction.variant === 'info' ? 'bg-indigo-500/10 text-indigo-400' :
@@ -134,14 +129,14 @@ export default function ProjectDetailPage() {
                     </div>
 
                     <div>
-                        <div className={`text-xs font-bold tracking-wider uppercase mb-0.5 ${nextAction.variant === 'warning' ? 'text-rose-400' :
-                            nextAction.variant === 'info' ? 'text-indigo-400' :
-                                'text-emerald-400'
+                        <div className={`text-xs font-bold tracking-wider uppercase mb-1 ${nextAction.variant === 'warning' ? 'text-rose-400/80' :
+                            nextAction.variant === 'info' ? 'text-indigo-400/80' :
+                                'text-emerald-400/80'
                             }`}>
                             {nextAction.variant === 'warning' ? 'Next Action' :
                                 nextAction.variant === 'info' ? 'Status' : 'Completed'}
                         </div>
-                        <p className="text-base font-medium text-zinc-200">
+                        <p className="text-base font-medium text-zinc-300">
                             {nextAction.message.replace('要対応：', '')}
                         </p>
                     </div>
@@ -150,11 +145,14 @@ export default function ProjectDetailPage() {
                 {nextAction.link && (
                     <Button
                         onClick={() => setActiveTab(nextAction.link!)}
-                        size="sm"
                         className={`
-                            font-medium transition-all shadow-sm
-                            ${nextAction.variant === 'warning' ? 'bg-rose-600 hover:bg-rose-700 text-white hover:shadow-rose-500/20' : ''}
-                            ${nextAction.variant === 'info' ? 'bg-indigo-600 hover:bg-indigo-700 text-white hover:shadow-indigo-500/20' : ''}
+                            font-medium transition-all shadow-sm border bg-transparent
+                            ${nextAction.variant === 'warning'
+                                ? 'text-rose-400 border-rose-500/30 hover:bg-rose-500/10 hover:border-rose-500/50'
+                                : ''}
+                            ${nextAction.variant === 'info'
+                                ? 'text-indigo-400 border-indigo-500/30 hover:bg-indigo-500/10 hover:border-indigo-500/50'
+                                : ''}
                         `}
                     >
                         {nextAction.label}
@@ -186,14 +184,21 @@ export default function ProjectDetailPage() {
                 <TabsContent value="overview" className="space-y-6">
                     <div className="space-y-6">
                         <Card className="bg-card/50 border-border backdrop-blur-sm">
-                            <CardHeader>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle>プロジェクト詳細</CardTitle>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-white">
+                                    <Edit2 className="h-4 w-4" />
+                                </Button>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-muted-foreground leading-relaxed">
                                     {MOCK_PROJECT.description}
                                 </p>
                                 <div className="mt-6 grid grid-cols-2 gap-4">
+                                    <div className="col-span-2 p-4 rounded-lg bg-background/50 border border-border">
+                                        <p className="text-xs text-muted-foreground mb-1">クライアント</p>
+                                        <p className="font-medium">{MOCK_PROJECT.client_name}</p>
+                                    </div>
                                     <div className="p-4 rounded-lg bg-background/50 border border-border">
                                         <p className="text-xs text-muted-foreground mb-1">開始日</p>
                                         <p className="font-medium">2025年11月24日</p>

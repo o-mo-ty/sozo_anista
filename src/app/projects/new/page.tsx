@@ -58,7 +58,7 @@ export default function NewProjectPage() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="clientEmail" className="text-zinc-300">連絡先メールアドレス <span className="text-rose-500">*</span></Label>
+                                    <Label htmlFor="clientEmail" className="text-zinc-300">クライアントメールアドレス <span className="text-rose-500">*</span></Label>
                                     <Input
                                         id="clientEmail"
                                         type="email"

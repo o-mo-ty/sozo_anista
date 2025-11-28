@@ -196,45 +196,72 @@ export function ScenarioTab({ projectId }: ScenarioTabProps) {
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-                {scenarios.map((scenario) => (
-                    <Card
-                        key={scenario.id}
-                        className={`relative transition-all duration-200 border-2 flex flex-col cursor-pointer
-              ${selectedOption === scenario.id
-                                ? 'bg-indigo-950/30 border-indigo-500 shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]'
-                                : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700'}`}
-                        onClick={() => setSelectedOption(scenario.id)}
-                    >
-                        {selectedOption === scenario.id && (
-                            <div className="absolute -top-3 -right-3 bg-indigo-500 text-white p-1 rounded-full shadow-lg">
-                                <Check className="h-4 w-4" />
-                            </div>
-                        )}
+                {scenarios.map((scenario, index) => {
+                    const isSelected = selectedOption === scenario.id
+                    const optionLabel = `案 ${String.fromCharCode(65 + index)}` // 案 A, 案 B...
 
-                        <CardHeader>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                                {scenario.tags && scenario.tags.map((tag: string) => (
-                                    <Badge key={tag} variant="secondary" className="bg-zinc-800 text-zinc-400 text-[10px]">
-                                        {tag}
-                                    </Badge>
-                                ))}
+                    return (
+                        <div
+                            key={scenario.id}
+                            onClick={() => setSelectedOption(scenario.id)}
+                            className={`
+                                group relative overflow-hidden rounded-xl border transition-all duration-300 cursor-pointer
+                                ${isSelected
+                                    ? 'border-indigo-500/50 bg-indigo-950/20 shadow-[0_0_40px_-10px_rgba(99,102,241,0.3)] scale-[1.02]'
+                                    : 'border-white/5 bg-zinc-900/40 hover:bg-zinc-900/60 hover:border-white/10 hover:-translate-y-1'
+                                }
+                            `}
+                        >
+                            {/* Background Gradient Effect */}
+                            <div className={`absolute inset-0 bg-gradient-to-br transition-opacity duration-500 ${isSelected ? 'from-indigo-500/10 via-purple-500/5 to-transparent opacity-100' : 'from-white/5 to-transparent opacity-0 group-hover:opacity-100'}`} />
+
+                            {/* Selection Indicator */}
+                            <div className={`absolute top-4 right-4 transition-all duration-300 ${isSelected ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+                                <div className="bg-indigo-500 text-white p-1.5 rounded-full shadow-lg shadow-indigo-500/40">
+                                    <Check className="h-4 w-4" />
+                                </div>
                             </div>
-                            <CardTitle className={`text-lg ${selectedOption === scenario.id ? 'text-indigo-400' : 'text-zinc-200'}`}>
-                                {scenario.title}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-1">
-                            <p className="text-sm text-zinc-400 leading-relaxed">
-                                {scenario.content}
-                            </p>
-                        </CardContent>
-                        <CardFooter>
-                            <div className={`w-full text-center text-sm ${selectedOption === scenario.id ? 'text-indigo-400 font-medium' : 'text-zinc-500'}`}>
-                                {selectedOption === scenario.id ? '選択中' : 'クリックして選択'}
+
+                            <div className="relative p-6 h-full flex flex-col">
+                                <div className="mb-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className={`
+                                            px-3 py-1 rounded-full text-xs font-bold tracking-wider
+                                            ${isSelected
+                                                ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30'
+                                                : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 group-hover:text-zinc-300 transition-colors'
+                                            }
+                                        `}>
+                                            {optionLabel}
+                                        </span>
+                                    </div>
+                                    <h3 className={`text-lg font-bold leading-snug transition-colors ${isSelected ? 'text-white' : 'text-zinc-200 group-hover:text-white'}`}>
+                                        {scenario.title.split(':')[1] || scenario.title}
+                                    </h3>
+                                </div>
+
+                                <div className="flex-1">
+                                    <p className={`text-sm leading-relaxed transition-colors ${isSelected ? 'text-zinc-300' : 'text-zinc-400 group-hover:text-zinc-300'}`}>
+                                        {scenario.content}
+                                    </p>
+                                </div>
+
+                                <div className={`mt-6 pt-4 border-t transition-colors ${isSelected ? 'border-indigo-500/20' : 'border-white/5'}`}>
+                                    <div className={`text-xs font-medium flex items-center justify-center gap-2 transition-colors ${isSelected ? 'text-indigo-400' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
+                                        {isSelected ? (
+                                            <span className="flex items-center gap-2">
+                                                <Check className="h-4 w-4" />
+                                                選択中
+                                            </span>
+                                        ) : (
+                                            <span className="group-hover:text-zinc-300 transition-colors">クリックして選択</span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </CardFooter>
-                    </Card>
-                ))}
+                        </div>
+                    )
+                })}
             </div>
 
             {/* Selection & Comment Area */}
