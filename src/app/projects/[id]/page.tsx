@@ -180,6 +180,17 @@ export default function ProjectDetailPage() {
                 <TabsContent value="overview" className="space-y-6">
                     <div className="space-y-6">
                         <Card className="bg-card/50 border-border backdrop-blur-sm">
+                            <CardHeader>
+                                <CardTitle>進捗状況</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="mt-2">
+                                    <ProjectProgressStepper currentPhase={MOCK_PROJECT.current_phase} />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="bg-card/50 border-border backdrop-blur-sm">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle>プロジェクト詳細</CardTitle>
                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-white">
@@ -203,17 +214,6 @@ export default function ProjectDetailPage() {
                                         <p className="text-xs text-muted-foreground mb-1">納期</p>
                                         <p className="font-medium">2025年12月10日</p>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="bg-card/50 border-border backdrop-blur-sm">
-                            <CardHeader>
-                                <CardTitle>進捗状況</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="mt-2">
-                                    <ProjectProgressStepper currentPhase={MOCK_PROJECT.current_phase} />
                                 </div>
                             </CardContent>
                         </Card>
