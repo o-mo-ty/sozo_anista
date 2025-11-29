@@ -45,6 +45,23 @@ export default function LoginPage() {
         }
     }
 
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault()
+        const pastedData = e.clipboardData.getData('text').slice(0, 6)
+        if (!/^\d+$/.test(pastedData)) return
+
+        const newOtp = [...otp]
+        pastedData.split('').forEach((char, i) => {
+            if (i < 6) newOtp[i] = char
+        })
+        setOtp(newOtp)
+
+        // Focus the last filled input or the next empty one
+        const nextIndex = Math.min(pastedData.length, 5)
+        const nextInput = document.getElementById(`otp-${nextIndex}`)
+        nextInput?.focus()
+    }
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         if (otp.some(d => !d)) return
@@ -71,7 +88,7 @@ export default function LoginPage() {
                         SOZO Anime Studio
                     </h1>
                     <p className="text-zinc-400 text-sm">
-                        次世代のアニメーション制作管理プラットフォーム
+                        AIアニメーション制作管理プラットフォーム
                     </p>
                 </div>
 
@@ -160,6 +177,7 @@ export default function LoginPage() {
                                                     value={digit}
                                                     onChange={(e) => handleOtpChange(index, e.target.value)}
                                                     onKeyDown={(e) => handleKeyDown(index, e)}
+                                                    onPaste={handlePaste}
                                                     className="w-10 h-12 md:w-12 md:h-14 text-center text-xl font-bold bg-zinc-950/50 border border-zinc-800 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all text-white"
                                                 />
                                             ))}
@@ -204,11 +222,11 @@ export default function LoginPage() {
                             ログインすることで、以下の規約に同意したことになります。
                         </p>
                         <div className="flex items-center justify-center gap-4 text-[10px] text-zinc-600">
-                            <Link href="#" className="hover:text-zinc-400 transition-colors">利用規約</Link>
+                            <Link href="/terms" className="hover:text-zinc-400 transition-colors">利用規約</Link>
                             <span className="text-zinc-800">|</span>
-                            <Link href="#" className="hover:text-zinc-400 transition-colors">プライバシーポリシー</Link>
+                            <Link href="/privacy" className="hover:text-zinc-400 transition-colors">プライバシーポリシー</Link>
                             <span className="text-zinc-800">|</span>
-                            <Link href="#" className="hover:text-zinc-400 transition-colors">運営会社</Link>
+                            <Link href="/company" className="hover:text-zinc-400 transition-colors">運営会社</Link>
                         </div>
                     </div>
                 </div>
