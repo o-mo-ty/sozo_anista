@@ -9,7 +9,7 @@ import { createClient } from '@/utils/supabase/client'
 import { Plus, Search, Filter, MoreHorizontal, FileText, X, LayoutGrid, List } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { PageHeader } from '@/components/page-header'
 
@@ -50,7 +50,7 @@ const MOCK_PROJECTS: Project[] = [
     },
 ]
 
-export default function ProjectsPage() {
+function ProjectsContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const initialFilter = searchParams.get('filter')
@@ -324,5 +324,13 @@ export default function ProjectsPage() {
                 </div>
             </div>
         </AppLayout>
+    )
+}
+
+export default function ProjectsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ProjectsContent />
+        </Suspense>
     )
 }
