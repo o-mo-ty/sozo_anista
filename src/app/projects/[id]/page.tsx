@@ -106,7 +106,6 @@ export default function ProjectDetailPage() {
                     </>
                 }
                 backHref="/"
-                className="mb-8"
             />
 
             {/* Next Action Banner */}

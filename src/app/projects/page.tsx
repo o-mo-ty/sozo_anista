@@ -151,8 +151,8 @@ export default function ProjectsPage() {
 
     return (
         <AppLayout>
-            <div className="space-y-6">
-                <div className="flex flex-col gap-6">
+            <div>
+                <div>
                     {/* Header */}
                     <PageHeader
                         title="プロジェクト一覧"

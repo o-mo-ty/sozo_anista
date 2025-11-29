@@ -34,7 +34,6 @@ export default function Dashboard() {
         <PageHeader
           title="ダッシュボード"
           description="プロジェクトの状況概要とタスク確認"
-          className="mb-8"
         />
 
         {/* Stats Grid */}
