@@ -13,6 +13,7 @@ import { ScenarioTab } from '@/components/project/scenario-tab'
 import { WorkspaceTab } from '@/components/project/workspace-tab'
 import { HearingTab } from '@/components/project/hearing-tab'
 import { ProjectProgressStepper } from '@/components/project/project-progress-stepper'
+import { PageHeader } from '@/components/page-header'
 
 // Mock data for development
 const MOCK_PROJECT = {
@@ -97,20 +98,16 @@ export default function ProjectDetailPage() {
 
     return (
         <AppLayout>
-            <div className="flex items-center gap-4 mb-8">
-                <Button variant="outline" size="icon" asChild className="h-10 w-10 rounded-full border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:text-white shrink-0">
-                    <Link href="/">
-                        <ArrowLeft className="h-4 w-4" />
-                    </Link>
-                </Button>
-
-                <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                        <h1 className="text-2xl font-bold text-white tracking-tight">{MOCK_PROJECT.title}</h1>
+            <PageHeader
+                title={
+                    <>
+                        {MOCK_PROJECT.title}
                         {getStatusBadge(MOCK_PROJECT.status)}
-                    </div>
-                </div>
-            </div>
+                    </>
+                }
+                backHref="/"
+                className="mb-8"
+            />
 
             {/* Next Action Banner */}
             <div className={`rounded-xl border p-5 mb-8 flex items-center justify-between transition-all duration-300 ${nextAction.variant === 'warning' ? 'bg-rose-500/5 border-rose-500/10' :

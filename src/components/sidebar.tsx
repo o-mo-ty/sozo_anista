@@ -16,6 +16,7 @@ import {
     Home,
     PanelLeftClose,
     PanelLeftOpen,
+    Users,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -105,6 +106,23 @@ export function Sidebar({ className }: SidebarProps) {
                                 <FolderOpen className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
                                 <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-tight text-center" : "")}>
                                     {isCollapsed ? <>プロジェクト<br />一覧</> : "プロジェクト一覧"}
+                                </span>
+                            </Link>
+                        </Button>
+                        <Button
+                            asChild
+                            variant={pathname === '/users' ? 'secondary' : 'ghost'}
+                            className={cn(
+                                "w-full transition-all duration-300",
+                                isCollapsed
+                                    ? "h-auto flex-col justify-center gap-1 py-3 px-0"
+                                    : "justify-start"
+                            )}
+                        >
+                            <Link href="/users">
+                                <Users className={cn("transition-all", isCollapsed ? "h-6 w-6 mb-1" : "mr-2 h-4 w-4")} />
+                                <span className={cn("transition-all", isCollapsed ? "text-[10px] leading-tight text-center" : "")}>
+                                    {isCollapsed ? <>ユーザー<br />一覧</> : "ユーザー一覧"}
                                 </span>
                             </Link>
                         </Button>
