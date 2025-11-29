@@ -129,26 +129,7 @@ export function Sidebar({ className }: SidebarProps) {
                     </div>
                 </div>
 
-                {!isCollapsed && (
-                    <>
-                        <Separator className="mx-4 w-auto bg-zinc-800" />
-                        <div className="px-3 py-2">
-                            <h2 className="mb-2 px-4 text-xs font-semibold tracking-tight text-zinc-400 whitespace-nowrap overflow-hidden">
-                                最近のプロジェクト
-                            </h2>
-                            <div className="space-y-1">
-                                <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white truncate">
-                                    <FileText className="mr-2 h-4 w-4 shrink-0" />
-                                    <span className="truncate">Project Alpha</span>
-                                </Button>
-                                <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white truncate">
-                                    <FileText className="mr-2 h-4 w-4 shrink-0" />
-                                    <span className="truncate">Project Beta</span>
-                                </Button>
-                            </div>
-                        </div>
-                    </>
-                )}
+
 
                 <div className={cn("px-4 mt-auto", isCollapsed ? "px-2" : "px-4")}>
                     {/* Toggle Button */}
