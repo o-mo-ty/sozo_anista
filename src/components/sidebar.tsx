@@ -34,7 +34,7 @@ export function Sidebar({ className }: SidebarProps) {
     return (
         <div
             className={cn(
-                'pb-12 border-r border-sidebar-border bg-sidebar/95 backdrop-blur-xl h-screen fixed left-0 top-0 z-50 transition-all duration-300 ease-in-out',
+                'pb-4 border-r border-sidebar-border bg-sidebar/95 backdrop-blur-xl h-screen fixed left-0 top-0 z-50 transition-all duration-300 ease-in-out',
                 isCollapsed ? 'w-20' : 'w-64',
                 className
             )}
